@@ -46,29 +46,6 @@ export default function StatusCards({ bookings, onNext }: Props) {
   );
 }
 
-/* ---------- NEXT BUTTON (GLOBAL) ---------- */
-
-function NextButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Button
-      size="sm"
-      variant="outline"
-      onClick={onClick}
-      className="
-        gap-1
-        border-neutral-700
-        bg-neutral-900
-        text-neutral-200
-        hover:bg-neutral-800
-        transition-colors
-      "
-    >
-      Next
-      <ArrowRight className="h-3.5 w-3.5" />
-    </Button>
-  );
-}
-
 /* ---------- CARD BOX ---------- */
 
 function CardBox({
