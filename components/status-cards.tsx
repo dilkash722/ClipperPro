@@ -30,12 +30,7 @@ export default function StatusCards({ bookings }: Props) {
       <CardBox title="Total Customers" count={total} icon={Users} />
 
       {/* WAITING — GLOBAL NEXT ONLY WHEN NEW EXISTS */}
-      <CardBox
-        title="Waiting"
-        count={waiting}
-        icon={Hourglass}
-        action={newCount > 0 ? <NextButton onClick={onNext} /> : null}
-      />
+      <CardBox title="Waiting" count={waiting} icon={Hourglass} />
 
       {/* PROCESSING */}
       <CardBox title="Processing" count={processing} icon={Scissors} />
