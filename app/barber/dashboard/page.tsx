@@ -59,7 +59,7 @@ export default function BarberDashboardPage() {
 
   function updateStatus(nextStatus: BarberStatus) {
     const session = storage.getSession();
-    if (!session) return;
+    if (!session || session.role !== "barber") return;
 
     const barbers = storage
       .getBarbers()
