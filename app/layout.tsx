@@ -8,11 +8,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="m-0 overflow-x-hidden bg-background text-foreground">
         <Header />
-
-        {/* MAIN CONTENT WRAPPER */}
-        <main className="mx-auto max-w-7xl px-6">{children}</main>
+        {children}
       </body>
     </html>
   );
