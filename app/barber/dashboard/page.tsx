@@ -65,8 +65,10 @@ export default function BarberDashboardPage() {
     const nextWaiting = barberBookings.find((b) => b.status === "waiting");
 
     if (nextWaiting) {
-      const updated = all.map((b) =>
-        b.id === nextWaiting.id ? { ...b, status: "processing" } : b
+      const updated: Booking[] = all.map((b) =>
+        b.id === nextWaiting.id
+          ? { ...b, status: "processing" as BookingStatus }
+          : b
       );
 
       storage.saveBookings(updated);
@@ -80,8 +82,10 @@ export default function BarberDashboardPage() {
     );
 
     if (nextProcessing) {
-      const updated = all.map((b) =>
-        b.id === nextProcessing.id ? { ...b, status: "completed" } : b
+      const updated: Booking[] = all.map((b) =>
+        b.id === nextProcessing.id
+          ? { ...b, status: "completed" as BookingStatus }
+          : b
       );
 
       storage.saveBookings(updated);
