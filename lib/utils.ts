@@ -10,12 +10,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /* ---------------------------------- */
-/* App specific utils (optional below) */
+/* App specific utils                  */
 /* ---------------------------------- */
 
 import { storage } from "./storage";
 import { Barber } from "./types";
 
+/**
+ * Seed default barber shops
+ * Runs only once (when no barbers exist)
+ */
 export function seedBarbersIfNeeded() {
   if (storage.getBarbers().length > 0) return;
 
@@ -29,6 +33,7 @@ export function seedBarbersIfNeeded() {
     owner: b[1],
     address: b[2],
     paid: true,
+    status: "open", // ✅ REQUIRED BY Barber TYPE
   }));
 
   storage.saveBarbers(data);
