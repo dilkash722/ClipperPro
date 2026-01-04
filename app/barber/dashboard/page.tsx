@@ -168,8 +168,7 @@ export default function BarberDashboardPage() {
         </div>
 
         {/* ================= STATUS CARDS ================= */}
-        <StatusCards bookings={bookings} onNext={globalNext} />
-
+        <StatusCards bookings={bookings} />
         {/* ================= BOOKINGS ================= */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold tracking-wide">
