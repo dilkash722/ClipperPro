@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Booking, BookingStatus } from "@/lib/types";
 
 import StatusCards from "@/components/status-cards";
 import BookingTable from "@/components/booking-table";
