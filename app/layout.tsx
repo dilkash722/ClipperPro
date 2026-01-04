@@ -10,7 +10,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        {children}
+
+        {/* MAIN CONTENT WRAPPER */}
+        <main className="mx-auto max-w-7xl px-6">{children}</main>
       </body>
     </html>
   );
