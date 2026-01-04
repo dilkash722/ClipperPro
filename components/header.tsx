@@ -73,7 +73,11 @@ export default function Header() {
                 </Button>
 
                 <Button
-                  className="bg-neutral-100 text-neutral-900"
+                  className="
+                 bg-neutral-100 text-neutral-900
+                 hover:bg-neutral-300
+                  transition-colors
+                  "
                   onClick={() => {
                     setRole("admin");
                     setOpen(true);
@@ -197,7 +201,7 @@ export default function Header() {
                     rounded-md bg-neutral-100
                     px-3 py-2.5
                     text-sm font-medium text-neutral-900
-                    hover:bg-neutral-200
+                    hover:bg-neutral-300
                     active:scale-[0.97]
                     transition-all
                   "
