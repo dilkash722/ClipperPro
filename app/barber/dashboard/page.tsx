@@ -8,7 +8,6 @@ import StatusCards from "@/components/status-cards";
 import BookingTable from "@/components/booking-table";
 
 import { storage } from "@/lib/storage";
-import { Booking } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
 import { Scissors } from "lucide-react";
