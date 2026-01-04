@@ -3,6 +3,7 @@ export type Barber = {
   shop: string;
   owner: string;
   address: string;
+  phone?: string; // optional – call / WhatsApp support
   paid: boolean;
 };
 
