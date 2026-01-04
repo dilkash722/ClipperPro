@@ -7,7 +7,7 @@ export type Barber = {
   paid: boolean;
 };
 
-export type BookingStatus = "waiting" | "processing" | "completed";
+export type BookingStatus = "new" | "waiting" | "processing" | "completed";
 
 export type Booking = {
   id: string;
