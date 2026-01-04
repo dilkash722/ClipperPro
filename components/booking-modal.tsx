@@ -1,26 +1,29 @@
 "use client";
+import { useEffect } from "react";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Barber, Booking } from "@/lib/types";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 import { storage } from "@/lib/storage";
+import { Barber, Booking } from "@/lib/types";
 
 import {
-  CheckCircle2,
-  Calendar,
-  Clock,
+  Scissors,
   User,
   Phone,
+  Calendar,
+  Clock,
   Hash,
-  Scissors,
+  CheckCircle2,
   Store,
+  Timer,
 } from "lucide-react";
 
 export function BookingModal({
@@ -33,8 +36,19 @@ export function BookingModal({
   barber: Barber;
 }) {
   const [success, setSuccess] = useState<Booking | null>(null);
+  const [liveBooking, setLiveBooking] = useState<Booking | null>(null);
 
-  function submit(form: FormData) {
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = new FormData(e.currentTarget);
+
+    const active = storage
+      .getBookings()
+      .filter((b) => b.barberId === barber.id && b.status !== "completed");
+
+    const token = active.length + 1;
+
     const booking: Booking = {
       id: "B" + Date.now(),
       barberId: barber.id,
@@ -43,28 +57,43 @@ export function BookingModal({
       date: form.get("date") as string,
       time: form.get("time") as string,
       status: "waiting",
+      token,
       createdAt: Date.now(),
     };
 
-    const all = storage.getBookings();
-    storage.saveBookings([...all, booking]);
+    storage.saveBookings([...storage.getBookings(), booking]);
     setSuccess(booking);
   }
+  useEffect(() => {
+    if (!success) return;
+
+    const interval = setInterval(() => {
+      const latest = storage.getBookings().find((b) => b.id === success.id);
+
+      if (latest) {
+        setLiveBooking(latest);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [success]);
+
+  const current = liveBooking ?? success;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-950 border-neutral-800 text-neutral-100">
+      <DialogContent className="sm:max-w-md bg-neutral-950 border-neutral-800 text-neutral-100">
         {!success ? (
           <>
-            {/* ---------- HEADER ---------- */}
+            {/* ===== HEADER ===== */}
             <DialogHeader>
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-800">
-                  <Scissors className="h-5 w-5 text-neutral-200" />
+                  <Scissors className="h-5 w-5" />
                 </div>
 
                 <div>
-                  <DialogTitle className="text-lg font-bold tracking-tight">
+                  <DialogTitle className="text-lg font-bold">
                     Book Appointment
                   </DialogTitle>
                   <p className="text-sm text-neutral-400 flex items-center gap-1">
@@ -75,36 +104,44 @@ export function BookingModal({
               </div>
             </DialogHeader>
 
-            {/* ---------- FORM ---------- */}
-            <form action={submit} className="space-y-4 pt-4">
-              <IconInput
+            {/* ===== FORM ===== */}
+            <form onSubmit={submit} className="space-y-4 pt-4">
+              <Field
+                label="Customer Name"
                 name="name"
                 icon={User}
-                placeholder="Customer full name"
+                placeholder="Enter full name"
               />
 
-              <IconInput
+              <Field
+                label="Mobile Number"
                 name="mobile"
                 icon={Phone}
-                placeholder="Mobile number"
+                placeholder="Enter mobile number"
               />
 
-              <div className="grid grid-cols-2 gap-3">
-                <IconInput name="date" icon={Calendar} type="date" />
+              <Field label="Date" name="date" type="date" icon={Calendar} />
 
-                <IconInput name="time" icon={Clock} type="time" />
+              <Field label="Time" name="time" type="time" icon={Clock} />
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="bg-white text-neutral-900"
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+
+                <Button type="submit" className="bg-neutral-900">
+                  Confirm
+                </Button>
               </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-white text-neutral-900 hover:bg-neutral-200 font-semibold"
-              >
-                Confirm Booking
-              </Button>
             </form>
           </>
         ) : (
-          /* ---------- SUCCESS ---------- */
+          /* ===== SUCCESS / TRACKING ===== */
           <div className="space-y-6 text-center">
             <div className="flex justify-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500/10">
@@ -114,28 +151,38 @@ export function BookingModal({
 
             <div>
               <h3 className="text-lg font-bold text-green-500">
-                Booking Confirmed
+                Booking Successful
               </h3>
               <p className="text-sm text-neutral-400">
-                Your barber slot is locked
+                Please wait for your turn
               </p>
             </div>
 
-            <div className="space-y-2 text-sm text-left">
-              <Detail icon={Hash} label="Booking ID" value={success.id} />
-              <Detail
-                icon={User}
-                label="Customer"
-                value={success.customerName}
+            {/* ===== TRACKING CARD ===== */}
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-4 space-y-3 text-sm">
+              <TrackRow icon={Hash} label="Booking ID" value={success.id} />
+              <TrackRow
+                icon={Timer}
+                label="Token Number"
+                value={`#${success.token}`}
+                highlight
               />
-              <Detail icon={Phone} label="Mobile" value={success.mobile} />
-              <Detail icon={Calendar} label="Date" value={success.date} />
-              <Detail icon={Clock} label="Time" value={success.time} />
+              <TrackRow
+                icon={Clock}
+                label="Current Status"
+                value="Waiting"
+                status
+              />
             </div>
+
+            <p className="text-xs text-neutral-500">
+              Your status will move to <b>Processing</b> when the barber starts
+              your service.
+            </p>
 
             <Button
               onClick={onClose}
-              className="w-full bg-white text-neutral-900 hover:bg-neutral-200"
+              className="w-full bg-white text-neutral-900"
             >
               Done
             </Button>
@@ -146,48 +193,64 @@ export function BookingModal({
   );
 }
 
-/* ---------- ICON INPUT ---------- */
+/* ===== REUSABLE FIELD ===== */
 
-function IconInput({
+function Field({
+  label,
   icon: Icon,
   ...props
 }: {
+  label: string;
   icon: React.ElementType;
-} & React.ComponentProps<typeof Input>) {
+} & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className="relative">
-      <Icon className="absolute left-3 top-3 h-4 w-4 text-neutral-500" />
-      <Input
-        {...props}
-        required
-        className="
-          pl-9
-          bg-neutral-900
-          border-neutral-800
-          text-neutral-100
-          placeholder:text-neutral-500
-        "
-      />
+    <div className="space-y-1.5">
+      <Label className="text-xs uppercase text-neutral-400">{label}</Label>
+      <div className="relative">
+        <Icon className="absolute left-3 top-2.5 h-4 w-4 text-neutral-500" />
+        <Input
+          {...props}
+          required
+          className="pl-9 bg-neutral-900 border-neutral-800 text-neutral-100"
+        />
+      </div>
     </div>
   );
 }
 
-/* ---------- DETAIL ROW ---------- */
+/* ===== TRACK ROW ===== */
 
-function Detail({
+function TrackRow({
   icon: Icon,
   label,
   value,
+  highlight,
+  status,
 }: {
   icon: React.ElementType;
   label: string;
   value: string;
+  highlight?: boolean;
+  status?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <Icon className="h-4 w-4 text-neutral-400" />
-      <span className="w-24 text-neutral-400">{label}</span>
-      <span className="font-medium text-neutral-100">{value}</span>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2 text-neutral-400">
+        <Icon className="h-4 w-4" />
+        {label}
+      </div>
+
+      <span
+        className={
+          highlight
+            ? "font-bold text-green-400"
+            : status
+            ? "rounded-full bg-yellow-500/10 px-3 py-0.5 text-yellow-400 text-xs"
+            : "text-neutral-100"
+        }
+      >
+        {value}
+      </span>
     </div>
   );
 }

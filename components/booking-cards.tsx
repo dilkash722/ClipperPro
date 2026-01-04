@@ -1,7 +1,6 @@
 "use client";
 
 import { Booking } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -16,7 +15,7 @@ import {
 
 type Props = {
   bookings: Booking[];
-  onNext: () => void; // SAME prop, SAME logic
+  onNext: (id: string) => void;
 };
 
 export default function BookingTable({ bookings, onNext }: Props) {
@@ -49,15 +48,21 @@ export default function BookingTable({ bookings, onNext }: Props) {
               </div>
 
               <div>
-                <p className="font-semibold text-neutral-100">
+                <p className="font-semibold text-neutral-100 leading-tight">
                   {b.customerName}
                 </p>
-                <p className="text-xs text-neutral-400">
+
+                <p className="text-xs text-neutral-400 leading-snug">
                   Customer #{index + 1}
+                </p>
+
+                <p className="text-[11px] font-medium text-neutral-300 tracking-wide">
+                  Booking ID: {b.id}
                 </p>
               </div>
             </div>
 
+            {/* ✅ SQUARE + CURVE STATUS */}
             <StatusBadge status={b.status} />
           </div>
 
@@ -68,16 +73,16 @@ export default function BookingTable({ bookings, onNext }: Props) {
             <InfoRow icon={Clock} value={b.time} />
           </div>
 
-          {/* 🔥 CARD NEXT BUTTON (NO NEW LOGIC ADDED) */}
+          {/* NEXT BUTTON */}
           {(b.status === "waiting" || b.status === "processing") && (
             <Button
               size="sm"
-              onClick={onNext} // SAME globalNext
+              onClick={() => onNext(b.id)}
               className="
-                w-full
-                bg-neutral-800
-                text-neutral-200
-                hover:bg-neutral-700
+              w-full
+             bg-neutral-800
+             text-neutral-200
+             hover:bg-neutral-700
               "
             >
               Next
@@ -112,29 +117,34 @@ function InfoRow({
   );
 }
 
+/* ---------- STATUS (NO PILL, BARBER FEEL) ---------- */
+
 function StatusBadge({ status }: { status: Booking["status"] }) {
+  const base =
+    "inline-flex h-7 min-w-[96px] items-center justify-center gap-1 rounded-lg border bg-neutral-900 px-2 text-xs font-medium capitalize";
+
   if (status === "waiting") {
     return (
-      <Badge className="bg-neutral-800 text-neutral-200 gap-1">
+      <span className={`${base} border-neutral-700 text-yellow-400`}>
         <Hourglass className="h-3 w-3" />
         Waiting
-      </Badge>
+      </span>
     );
   }
 
   if (status === "processing") {
     return (
-      <Badge className="bg-amber-500/15 text-amber-400 gap-1">
+      <span className={`${base} border-neutral-700 text-amber-400`}>
         <Scissors className="h-3 w-3" />
         Processing
-      </Badge>
+      </span>
     );
   }
 
   return (
-    <Badge className="bg-green-500/15 text-green-400 gap-1">
+    <span className={`${base} border-neutral-700 text-green-400`}>
       <CheckCircle2 className="h-3 w-3" />
       Completed
-    </Badge>
+    </span>
   );
 }

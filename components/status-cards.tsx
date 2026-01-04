@@ -15,7 +15,6 @@ import {
 
 type Props = {
   bookings: Booking[];
-  onNext: () => void; // GLOBAL NEXT: new → waiting
 };
 
 export default function StatusCards({ bookings, onNext }: Props) {

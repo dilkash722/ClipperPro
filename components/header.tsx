@@ -50,7 +50,7 @@ export default function Header() {
             </div>
             <div className="leading-tight">
               <h1 className="text-lg font-semibold text-neutral-100">
-                ClipperPro
+                Smart Barber
               </h1>
               <p className="text-xs text-neutral-400">Barber Booking System</p>
             </div>
@@ -137,7 +137,7 @@ export default function Header() {
             </div>
             <div className="leading-tight">
               <p className="text-sm font-semibold text-neutral-100">
-                ClipperPro
+                Smart Barber
               </p>
               <p className="text-[11px] text-neutral-400">Barber Booking</p>
             </div>
