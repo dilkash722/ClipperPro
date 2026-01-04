@@ -40,14 +40,15 @@ export default function AdminDashboardPage() {
   /* ---------------- INIT ---------------- */
 
   useEffect(() => {
+    const session = storage.getSession();
+
     if (!session || session.role !== "admin") {
       router.push("/");
       return;
     }
 
     setBarbers(storage.getBarbers());
-  }, [router, session]);
-
+  }, [router]);
   /* ---------------- REGISTER BARBER ---------------- */
 
   function registerBarber(e: React.FormEvent) {
