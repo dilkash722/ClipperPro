@@ -17,7 +17,7 @@ type Props = {
   bookings: Booking[];
 };
 
-export default function StatusCards({ bookings, onNext }: Props) {
+export default function StatusCards({ bookings }: Props) {
   const newCount = bookings.filter((b) => b.status === "new").length;
   const waiting = bookings.filter((b) => b.status === "waiting").length;
   const processing = bookings.filter((b) => b.status === "processing").length;
