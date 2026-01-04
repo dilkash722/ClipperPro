@@ -39,14 +39,11 @@ export default function LoginModal({ open, onClose, role }: LoginModalProps) {
     }
   }, [role]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    let session: Session;
+  function handleSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
 
     if (role === "admin") {
-      session = { role: "admin" };
-      storage.setSession(session);
+      storage.setSession({ role: "admin" });
       onClose();
       router.push("/admin/dashboard");
       return;
@@ -54,8 +51,11 @@ export default function LoginModal({ open, onClose, role }: LoginModalProps) {
 
     if (!selectedBarber) return;
 
-    session = { role: "barber", barberId: selectedBarber };
-    storage.setSession(session);
+    storage.setSession({
+      role: "barber",
+      barberId: selectedBarber,
+    });
+
     onClose();
     router.push("/barber/dashboard");
   }
@@ -169,15 +169,16 @@ export default function LoginModal({ open, onClose, role }: LoginModalProps) {
             <Button
               type="button"
               variant="outline"
-              className="border-neutral-700 text-neutral-200 hover:bg-neutral-800"
+              className="bg-white text-neutral-900 hover:bg-neutral-200 font-semibold"
               onClick={resetAndClose}
             >
               Cancel
             </Button>
 
             <Button
-              type="submit"
-              className="bg-white text-neutral-900 hover:bg-neutral-200 font-semibold"
+              type="button"
+              onClick={handleSubmit}
+              className="bg-neutral-900 text-neutral-100 hover:bg-neutral-800 font-semibold"
             >
               Sign In
             </Button>

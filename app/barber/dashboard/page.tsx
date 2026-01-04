@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Booking, BookingStatus } from "@/lib/types";
 
 import StatusCards from "@/components/status-cards";
-import BookingTable from "@/components/booking-table";
+import BookingTable from "@/components/booking-cards";
 
 import { storage } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function BarberDashboardPage() {
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [barberName, setBarberName] = useState("");
-  const [ownerName, setOwnerName] = useState(""); // future ready
+  const [ownerName, setOwnerName] = useState("");
 
   /* ---------------- INIT ---------------- */
 
@@ -101,39 +101,43 @@ export default function BarberDashboardPage() {
   }
 
   return (
-    <main className="container mx-auto p-6 space-y-8 text-neutral-100">
-      {/* ================= HEADER ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900 border border-neutral-800">
-            <Scissors className="h-6 w-6 text-neutral-200" />
+    <main className="min-h-screen bg-neutral-950 text-neutral-100">
+      <div className="container mx-auto p-6 space-y-8">
+        {/* ================= HEADER ================= */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900 border border-neutral-800">
+              <Scissors className="h-6 w-6 text-neutral-200" />
+            </div>
+
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                {barberName}
+              </h1>
+              <p className="text-sm text-neutral-400">Owner: {ownerName}</p>
+            </div>
           </div>
 
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{barberName}</h1>
-            <p className="text-sm text-neutral-400">Owner: {ownerName}</p>
-          </div>
+          <Button
+            variant="outline"
+            onClick={logout}
+            className="border-neutral-700 text-neutral-800 hover:bg-neutral-800"
+          >
+            Logout
+          </Button>
         </div>
 
-        <Button
-          variant="outline"
-          onClick={logout}
-          className="border-neutral-700 text-neutral-200 hover:bg-neutral-800"
-        >
-          Logout
-        </Button>
-      </div>
+        {/* ================= STATUS CARDS ================= */}
+        <StatusCards bookings={bookings} onNext={globalNext} />
 
-      {/* ================= STATUS CARDS ================= */}
-      <StatusCards bookings={bookings} onNext={globalNext} />
+        {/* ================= BOOKINGS ================= */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold tracking-wide">
+            Today’s Appointments
+          </h2>
 
-      {/* ================= BOOKINGS ================= */}
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold tracking-wide">
-          Today’s Appointments
-        </h2>
-
-        <BookingTable bookings={bookings} onNext={globalNext} />
+          <BookingTable bookings={bookings} onNext={globalNext} />
+        </div>
       </div>
     </main>
   );

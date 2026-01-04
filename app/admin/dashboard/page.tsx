@@ -31,7 +31,7 @@ const ADMIN_ROLE = "Platform Owner · Admin";
 export default function AdminDashboardPage() {
   const router = useRouter();
 
-  const [session, setSession] = useState<null | { role: string }>(null); // ✅ ADD
+  const [session, setSession] = useState<null | { role: string }>(null);
   const [barbers, setBarbers] = useState<Barber[]>([]);
   const [shop, setShop] = useState("");
   const [owner, setOwner] = useState("");
@@ -40,16 +40,17 @@ export default function AdminDashboardPage() {
   /* ---------------- INIT ---------------- */
 
   useEffect(() => {
-    const s = storage.getSession(); // ✅ localStorage ab client me hi chalega
+    const s = storage.getSession();
 
     if (!s || s.role !== "admin") {
       router.push("/");
       return;
     }
 
-    setSession(s); // ✅ store session
+    setSession(s);
     setBarbers(storage.getBarbers());
   }, [router]);
+
   /* ---------------- REGISTER BARBER ---------------- */
 
   function registerBarber(e: React.FormEvent) {
@@ -107,7 +108,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight text-neutral-100">
                 {ADMIN_NAME}
               </h1>
               <p className="text-sm text-neutral-400">{ADMIN_ROLE}</p>
@@ -119,9 +120,13 @@ export default function AdminDashboardPage() {
             onClick={logout}
             className="
               border-neutral-700
+              bg-neutral-900
               text-neutral-200
               hover:bg-neutral-800
+              hover:text-white
               gap-2
+              font-medium
+              transition-colors
             "
           >
             <LogOut className="h-4 w-4" />
@@ -148,7 +153,7 @@ export default function AdminDashboardPage() {
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center gap-3">
                 <Scissors className="h-5 w-5 text-neutral-300" />
-                <h2 className="text-lg font-semibold tracking-tight">
+                <h2 className="text-lg font-medium tracking-tight text-neutral-100">
                   Register New Barber
                 </h2>
               </div>
@@ -182,7 +187,8 @@ export default function AdminDashboardPage() {
                     bg-white
                     text-neutral-900
                     hover:bg-neutral-200
-                    font-semibold
+                    font-medium
+                    tracking-tight
                   "
                 >
                   Register Barber
@@ -196,7 +202,7 @@ export default function AdminDashboardPage() {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <Store className="h-5 w-5 text-neutral-300" />
-                <h2 className="text-lg font-semibold tracking-tight">
+                <h2 className="text-lg font-medium tracking-tight text-neutral-100">
                   Barber Shops
                 </h2>
               </div>
@@ -223,7 +229,9 @@ export default function AdminDashboardPage() {
                     "
                   >
                     <div>
-                      <p className="font-medium text-neutral-100">{b.shop}</p>
+                      <p className="text-sm font-medium text-neutral-100">
+                        {b.shop}
+                      </p>
                       <p className="text-xs text-neutral-400">
                         {b.owner} · {b.address}
                       </p>
@@ -233,11 +241,17 @@ export default function AdminDashboardPage() {
                       size="sm"
                       variant="outline"
                       onClick={() => togglePaid(b.id)}
-                      className={`gap-1 ${
-                        b.paid
-                          ? "border-green-700 text-green-400 hover:bg-green-900/20"
-                          : "border-red-700 text-red-400 hover:bg-red-900/20"
-                      }`}
+                      className={`
+    gap-1
+    text-xs
+    font-medium
+    transition-colors
+    ${
+      b.paid
+        ? "border-green-700 bg-green-900/20 text-green-400 hover:bg-green-900/40 hover:text-green-300"
+        : "border-red-700 bg-red-900/20 text-red-400 hover:bg-red-900/40 hover:text-red-300"
+    }
+  `}
                     >
                       {b.paid ? (
                         <>
@@ -290,8 +304,8 @@ function StatCard({
         </div>
 
         <div>
-          <p className="text-sm text-neutral-400">{title}</p>
-          <p className="text-2xl font-bold">{value}</p>
+          <p className="text-sm font-medium text-neutral-400">{title}</p>
+          <p className="text-2xl font-semibold text-neutral-100">{value}</p>
         </div>
       </CardContent>
     </Card>

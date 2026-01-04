@@ -10,6 +10,9 @@ import { Phone, MessageCircle, Scissors } from "lucide-react";
 export function BarberCard({ barber }: { barber: Barber }) {
   const [open, setOpen] = useState(false);
 
+  const iconBtnBase =
+    "h-10 w-10 bg-neutral-900 border border-neutral-700 text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+
   return (
     <>
       <Card className="bg-neutral-900 border-neutral-800 hover:border-neutral-700 transition-colors">
@@ -21,7 +24,7 @@ export function BarberCard({ barber }: { barber: Barber }) {
             </div>
 
             <div className="leading-tight">
-              <h3 className="text-lg font-bold text-white tracking-tight">
+              <h3 className="text-lg font-semibold text-white tracking-tight">
                 {barber.shop}
               </h3>
               <p className="text-sm text-neutral-400">Owner: {barber.owner}</p>
@@ -41,7 +44,7 @@ export function BarberCard({ barber }: { barber: Barber }) {
                 flex-1
                 bg-white
                 text-neutral-900
-                font-semibold
+                font-medium
                 hover:bg-neutral-200
                 transition-colors
               "
@@ -52,14 +55,8 @@ export function BarberCard({ barber }: { barber: Barber }) {
 
             {/* Call */}
             <Button
-              variant="outline"
-              size="icon"
-              className="
-                border-neutral-700
-                text-neutral-200
-                hover:bg-neutral-800
-                transition-colors
-              "
+              type="button"
+              className={iconBtnBase}
               onClick={() => {
                 if (barber.phone) {
                   window.open(`tel:${barber.phone}`);
@@ -72,14 +69,8 @@ export function BarberCard({ barber }: { barber: Barber }) {
 
             {/* WhatsApp */}
             <Button
-              variant="outline"
-              size="icon"
-              className="
-                border-neutral-700
-                text-neutral-200
-                hover:bg-neutral-800
-                transition-colors
-              "
+              type="button"
+              className={iconBtnBase}
               onClick={() => {
                 if (barber.phone) {
                   window.open(`https://wa.me/${barber.phone}`, "_blank");

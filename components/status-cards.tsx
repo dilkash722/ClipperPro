@@ -15,10 +15,11 @@ import {
 
 type Props = {
   bookings: Booking[];
-  onNext: () => void;
+  onNext: () => void; // GLOBAL NEXT: new → waiting
 };
 
 export default function StatusCards({ bookings, onNext }: Props) {
+  const newCount = bookings.filter((b) => b.status === "new").length;
   const waiting = bookings.filter((b) => b.status === "waiting").length;
   const processing = bookings.filter((b) => b.status === "processing").length;
   const completed = bookings.filter((b) => b.status === "completed").length;
@@ -26,30 +27,27 @@ export default function StatusCards({ bookings, onNext }: Props) {
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      {/* TOTAL */}
       <CardBox title="Total Customers" count={total} icon={Users} />
 
+      {/* WAITING — GLOBAL NEXT ONLY WHEN NEW EXISTS */}
       <CardBox
         title="Waiting"
         count={waiting}
         icon={Hourglass}
-        action={waiting > 0 && <NextButton onClick={onNext} />}
+        action={newCount > 0 ? <NextButton onClick={onNext} /> : null}
       />
 
-      <CardBox
-        title="Processing"
-        count={processing}
-        icon={Scissors}
-        action={
-          waiting === 0 && processing > 0 && <NextButton onClick={onNext} />
-        }
-      />
+      {/* PROCESSING */}
+      <CardBox title="Processing" count={processing} icon={Scissors} />
 
+      {/* COMPLETED */}
       <CardBox title="Completed" count={completed} icon={CheckCircle2} />
     </div>
   );
 }
 
-/* ---------- NEXT BUTTON ---------- */
+/* ---------- NEXT BUTTON (GLOBAL) ---------- */
 
 function NextButton({ onClick }: { onClick: () => void }) {
   return (
@@ -60,8 +58,10 @@ function NextButton({ onClick }: { onClick: () => void }) {
       className="
         gap-1
         border-neutral-700
+        bg-neutral-900
         text-neutral-200
         hover:bg-neutral-800
+        transition-colors
       "
     >
       Next
@@ -70,7 +70,7 @@ function NextButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-/* ---------- CARD ---------- */
+/* ---------- CARD BOX ---------- */
 
 function CardBox({
   title,
@@ -96,12 +96,7 @@ function CardBox({
               {title}
             </h4>
             <div className="mt-1">
-              <Badge
-                variant="secondary"
-                className="bg-neutral-800 text-neutral-100"
-              >
-                {count}
-              </Badge>
+              <Badge className="bg-neutral-800 text-neutral-100">{count}</Badge>
             </div>
           </div>
         </div>
