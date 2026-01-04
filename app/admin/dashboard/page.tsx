@@ -30,8 +30,8 @@ const ADMIN_ROLE = "Platform Owner · Admin";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const session = storage.getSession();
 
+  const [session, setSession] = useState<null | { role: string }>(null); // ✅ ADD
   const [barbers, setBarbers] = useState<Barber[]>([]);
   const [shop, setShop] = useState("");
   const [owner, setOwner] = useState("");
@@ -40,13 +40,14 @@ export default function AdminDashboardPage() {
   /* ---------------- INIT ---------------- */
 
   useEffect(() => {
-    const session = storage.getSession();
+    const s = storage.getSession(); // ✅ localStorage ab client me hi chalega
 
-    if (!session || session.role !== "admin") {
+    if (!s || s.role !== "admin") {
       router.push("/");
       return;
     }
 
+    setSession(s); // ✅ store session
     setBarbers(storage.getBarbers());
   }, [router]);
   /* ---------------- REGISTER BARBER ---------------- */
