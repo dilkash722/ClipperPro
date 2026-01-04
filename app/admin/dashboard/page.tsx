@@ -62,6 +62,7 @@ export default function AdminDashboardPage() {
       owner: owner.trim(),
       address: address.trim(),
       paid: true,
+      status: "open",
     };
 
     const updated = [...barbers, newBarber];
